@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "job_id": "job-example-search",
+  "status": "implemented",
+  "summary": "제목 검색과 빈 검색어 동작을 구현했다. 실제 통과 판정은 관리자 검사를 기다린다.",
+  "changed_paths": [
+    "src/bookmarks/search.py",
+    "tests/test_search.py"
+  ],
+  "evidence_references": [
+    {
+      "source": "tests/test_search.py",
+      "detail": "검색과 빈 입력의 검증 코드",
+      "source_sha256": null
+    }
+  ],
+  "findings": [],
+  "requested_actions": []
+}

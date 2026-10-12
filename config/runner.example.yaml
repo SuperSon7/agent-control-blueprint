@@ -1,0 +1,71 @@
+schema_version: 1
+runtime:
+  state_dir: ./var
+  timezone: Asia/Seoul
+  sqlite_wal: true
+  active_projects: 1
+  concurrent_writers: 1
+  concurrent_local_inferences: 1
+billing:
+  allowed_modes: [subscription_only, local_only]
+  paid_ai_api_enabled: false
+  extra_usage_enabled: false
+  automatic_paid_fallback: false
+  on_quota_limit: pause
+  on_unverified_auth: block
+limits:
+  job_wall_seconds: 5400
+  cli_stage_seconds: 1800
+  subscription_stage_invocations: 6
+  repair_attempts: 2
+  provider_switches: 1
+  observed_tool_executions_per_stage: 80
+  hard_token_limit: null
+  reset_budget_on_resume: false
+context:
+  use_git_hash_cache: true
+  include_source_references: true
+  initial_input_target_tokens: 12000
+  diagnostic_output_max_bytes: 65536
+  expand_on_evidence_request: true
+models:
+  primary: codex_subscription
+  reviewer: claude_subscription
+  research_on_request: gemini_subscription
+  local: ollama_local
+remote:
+  default_transport: telegram
+  telegram:
+    enabled: false
+    mode: long_polling
+    bot_token_secret_name: AGENT_TELEGRAM_BOT_TOKEN
+    allowed_user_ids: []
+    allowed_chat_ids: []
+    private_chat_only: true
+    poll_timeout_seconds: 25
+    allowed_updates: [message, callback_query]
+    paid_broadcasts: false
+  discord:
+    enabled: false
+    mode: gateway
+    bot_token_secret_name: AGENT_DISCORD_BOT_TOKEN
+    allowed_user_ids: []
+    allowed_guild_ids: []
+    allowed_channel_ids: []
+    free_text_commands: false
+  mutation_message_max_age_seconds: 900
+  approval_ttl_seconds: 600
+  require_second_factor_for_prod: true
+  second_factor_configured: false
+  notify: [accepted, completed, failed, paused, approval_required, quota_blocked]
+  send_raw_logs: false
+  send_source_files: false
+  send_infra_plan_or_state: false
+publication:
+  auto_merge: false
+  controller_only: true
+deployment:
+  worker_has_apply_credentials: false
+  auto_apply_dev: false
+  auto_apply_prod: false
+  remote_prod_without_second_factor: false

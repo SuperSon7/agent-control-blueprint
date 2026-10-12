@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "language": "go",
+  "commands": {
+    "format": [
+      "gofmt",
+      "-l",
+      "."
+    ],
+    "lint": [
+      "go",
+      "vet",
+      "./..."
+    ],
+    "test": [
+      "go",
+      "test",
+      "./..."
+    ],
+    "build": [
+      "go",
+      "build",
+      "./..."
+    ]
+  },
+  "registration_required": true,
+  "missing_command": "block",
+  "format_failure_condition": "exit_code_nonzero_or_stdout_nonempty"
+}

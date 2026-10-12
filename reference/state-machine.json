@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "states": [
+    "PROPOSED",
+    "PLANNING",
+    "NEEDS_INPUT",
+    "READY",
+    "PREFLIGHT",
+    "CONTEXT",
+    "IMPLEMENTING",
+    "CHECKING",
+    "REVIEWING",
+    "REVISING",
+    "READY_FOR_PR",
+    "PUBLISHING",
+    "PR_OPENED",
+    "PLAN_GENERATING",
+    "POLICY_CHECKING",
+    "WAITING_APPROVAL",
+    "APPLYING",
+    "VERIFYING_DEPLOYMENT",
+    "PAUSED",
+    "BLOCKED_QUOTA",
+    "AUTH_REQUIRED",
+    "BUDGET_EXHAUSTED",
+    "FAILED",
+    "RECOVERING",
+    "NEEDS_RECONCILIATION",
+    "COMPLETED",
+    "CANCELLED"
+  ],
+  "transitions": {
+    "PROPOSED": [
+      "PLANNING",
+      "READY",
+      "CANCELLED"
+    ],
+    "PLANNING": [
+      "PROPOSED",
+      "NEEDS_INPUT",
+      "PAUSED",
+      "FAILED"
+    ],
+    "NEEDS_INPUT": [
+      "PROPOSED",
+      "READY",
+      "CANCELLED"
+    ],
+    "READY": [
+      "PREFLIGHT",
+      "PAUSED",
+      "CANCELLED"
+    ],
+    "PREFLIGHT": [
+      "CONTEXT",
+      "PLAN_GENERATING",
+      "AUTH_REQUIRED",
+      "BLOCKED_QUOTA",
+      "NEEDS_INPUT",
+      "FAILED",
+      "PAUSED"
+    ],
+    "CONTEXT": [
+      "IMPLEMENTING",
+      "NEEDS_INPUT",
+      "BUDGET_EXHAUSTED",
+      "FAILED",
+      "PAUSED"
+    ],
+    "IMPLEMENTING": [
+      "CHECKING",
+      "NEEDS_INPUT",
+      "AUTH_REQUIRED",
+      "BLOCKED_QUOTA",
+      "BUDGET_EXHAUSTED",
+      "FAILED",
+      "PAUSED",
+      "CANCELLED"
+    ],
+    "CHECKING": [
+      "REVISING",
+      "REVIEWING",
+      "READY_FOR_PR",
+      "BUDGET_EXHAUSTED",
+      "FAILED",
+      "PAUSED"
+    ],
+    "REVIEWING": [
+      "REVISING",
+      "READY_FOR_PR",
+      "WAITING_APPROVAL",
+      "AUTH_REQUIRED",
+      "BLOCKED_QUOTA",
+      "BUDGET_EXHAUSTED",
+      "FAILED",
+      "PAUSED"
+    ],
+    "REVISING": [
+      "CHECKING",
+      "NEEDS_INPUT",
+      "AUTH_REQUIRED",
+      "BLOCKED_QUOTA",
+      "BUDGET_EXHAUSTED",
+      "FAILED",
+      "PAUSED",
+      "CANCELLED"
+    ],
+    "READY_FOR_PR": [
+      "PUBLISHING",
+      "WAITING_APPROVAL",
+      "PAUSED",
+      "CANCELLED"
+    ],
+    "PUBLISHING": [
+      "PR_OPENED",
+      "FAILED",
+      "NEEDS_RECONCILIATION"
+    ],
+    "PR_OPENED": [
+      "COMPLETED"
+    ],
+    "PLAN_GENERATING": [
+      "POLICY_CHECKING",
+      "FAILED",
+      "BUDGET_EXHAUSTED",
+      "PAUSED"
+    ],
+    "POLICY_CHECKING": [
+      "WAITING_APPROVAL",
+      "FAILED",
+      "NEEDS_INPUT",
+      "PAUSED"
+    ],
+    "WAITING_APPROVAL": [
+      "READY_FOR_PR",
+      "PUBLISHING",
+      "APPLYING",
+      "NEEDS_INPUT",
+      "CANCELLED",
+      "PAUSED"
+    ],
+    "APPLYING": [
+      "VERIFYING_DEPLOYMENT",
+      "NEEDS_RECONCILIATION"
+    ],
+    "VERIFYING_DEPLOYMENT": [
+      "COMPLETED",
+      "NEEDS_RECONCILIATION"
+    ],
+    "PAUSED": [
+      "PREFLIGHT",
+      "RECOVERING",
+      "CANCELLED"
+    ],
+    "BLOCKED_QUOTA": [
+      "PREFLIGHT",
+      "CANCELLED"
+    ],
+    "AUTH_REQUIRED": [
+      "PREFLIGHT",
+      "CANCELLED"
+    ],
+    "BUDGET_EXHAUSTED": [
+      "PREFLIGHT",
+      "CANCELLED"
+    ],
+    "FAILED": [
+      "RECOVERING",
+      "CANCELLED"
+    ],
+    "RECOVERING": [
+      "PREFLIGHT",
+      "CHECKING",
+      "NEEDS_RECONCILIATION",
+      "PAUSED",
+      "FAILED"
+    ],
+    "NEEDS_RECONCILIATION": [
+      "RECOVERING",
+      "VERIFYING_DEPLOYMENT",
+      "COMPLETED",
+      "FAILED",
+      "CANCELLED"
+    ],
+    "COMPLETED": [],
+    "CANCELLED": []
+  },
+  "terminal": [
+    "COMPLETED",
+    "CANCELLED"
+  ],
+  "edge_guards_required": true,
+  "awaiting_approval_action_to_next": {
+    "accept_change": "READY_FOR_PR",
+    "publish_draft_pr": "PUBLISHING",
+    "apply_plan": "APPLYING"
+  },
+  "any_running_state_can_record_cancellation_intent": true,
+  "cloud_mutation_cancellation": "reconcile_before_new_execution"
+}

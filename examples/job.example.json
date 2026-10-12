@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "job_id": "job-example-search",
+  "project_id": "bookmark",
+  "kind": "feature",
+  "spec_version": 1,
+  "goal": "저장한 북마크를 제목으로 검색한다",
+  "acceptance": [
+    "검색어가 제목에 포함된 북마크만 반환한다",
+    "빈 검색어는 기존 목록을 반환한다",
+    "기존 저장·목록 동작의 테스트가 통과한다"
+  ],
+  "non_goals": [
+    "태그 검색",
+    "검색 엔진 도입",
+    "인증 구조 변경"
+  ],
+  "allowed_write_paths": [
+    "src/**",
+    "tests/**"
+  ],
+  "risk_floor": "standard",
+  "base_sha": null,
+  "environment": null,
+  "budget": {
+    "wall_seconds": 5400,
+    "subscription_stages": 6,
+    "repair_attempts": 2
+  }
+}

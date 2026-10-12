@@ -1,0 +1,10 @@
+{
+  "job_id": "job-example-infra",
+  "action": "apply_plan",
+  "spec_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "artifact_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "environment": "dev",
+  "policy_version": "0.1.0",
+  "checks_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+}

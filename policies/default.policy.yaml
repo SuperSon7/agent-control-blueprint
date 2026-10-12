@@ -1,0 +1,87 @@
+schema_version: 1
+policy_id: default
+version: 0.1.0
+unknown_risk: high
+model_can_lower_risk: false
+model_can_approve: false
+trusted_manifest_snapshot_required: true
+protected_paths:
+- .agent/project.yaml
+- .agent/rules.generated.md
+- PROJECT_RULES.md
+- AGENTS.md
+- CLAUDE.md
+- GEMINI.md
+- .github/workflows/**
+- .git/**
+- .agent/decisions/**
+- .agent/architecture.md
+protected_control_components:
+- policies
+- config
+- registry
+- approvals
+- check_definitions
+risk_rules:
+  high:
+  - '**/auth/**'
+  - '**/security/**'
+  - '**/migrations/**'
+  - infra/**
+  - '**/Dockerfile*'
+  - '**/pom.xml'
+  - '**/build.gradle*'
+  - '**/package.json'
+  - '**/pyproject.toml'
+  - '**/go.mod'
+  - '**/go.sum'
+  - '**/uv.lock'
+  - '**/poetry.lock'
+  - '**/package-lock.json'
+  - '**/pnpm-lock.yaml'
+  - '**/yarn.lock'
+  destructive_actions:
+  - production_data_delete
+  - production_resource_delete
+  - production_resource_replace
+  - broad_privilege_expansion
+  routine:
+  - docs/**
+  - '**/*.md'
+  standard:
+  - src/**
+  - tests/**
+review:
+  routine: optional
+  standard: sampled_or_project_required
+  high: required
+  destructive: required
+owner_approval:
+  high: required
+  destructive: required
+checks:
+  missing_required_check: block
+  skipped_required_check: block
+  removed_acceptance_check: block
+  changed_head_invalidates_evidence: true
+approvals:
+  one_time: true
+  ttl_seconds: 600
+  bind:
+  - job_id
+  - action
+  - spec_sha256
+  - head_sha
+  - artifact_sha256
+  - environment
+  - policy_version
+  - checks_sha256
+  compare_at_execution: true
+infra:
+  allow_model_apply: false
+  plan_max_age_seconds: 600
+  unknown_cost: require_owner_review
+  unknown_effect: block_automatic_apply
+  partial_apply_failure: reconcile_then_replan
+  destructive_in_general_loop: deny
+glob_semantics: double_star_matches_zero_or_more_path_segments

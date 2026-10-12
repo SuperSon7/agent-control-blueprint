@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "language": "javascript",
+  "commands": {
+    "lint": [
+      "npm.cmd",
+      "run",
+      "lint"
+    ],
+    "format": [
+      "npm.cmd",
+      "run",
+      "format:check"
+    ],
+    "test": [
+      "npm.cmd",
+      "run",
+      "test:ci"
+    ],
+    "build": [
+      "npm.cmd",
+      "run",
+      "build"
+    ]
+  },
+  "registration_required": true,
+  "missing_command": "block"
+}

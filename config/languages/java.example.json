@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "language": "java",
+  "commands": {
+    "lint": [
+      "mvnw.cmd",
+      "-q",
+      "checkstyle:check"
+    ],
+    "test": [
+      "mvnw.cmd",
+      "-q",
+      "test"
+    ],
+    "build": [
+      "mvnw.cmd",
+      "-q",
+      "-DskipTests",
+      "package"
+    ]
+  },
+  "registration_required": true,
+  "missing_command": "block",
+  "build_system": "maven_example_replace_with_gradle_if_used"
+}

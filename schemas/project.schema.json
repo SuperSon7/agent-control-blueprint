@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProjectManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_id",
+    "language",
+    "rules_version",
+    "documents",
+    "commands",
+    "checks",
+    "scope",
+    "git",
+    "roles",
+    "deployment"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+    },
+    "language": {
+      "enum": [
+        "python",
+        "go",
+        "javascript",
+        "java",
+        "mixed"
+      ]
+    },
+    "rules_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "documents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product",
+        "architecture",
+        "examples"
+      ],
+      "properties": {
+        "product": {
+          "type": "string",
+          "minLength": 1
+        },
+        "architecture": {
+          "type": "string",
+          "minLength": 1
+        },
+        "examples": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "commands": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "minItems": 1
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "architecture",
+        "acceptance"
+      ],
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "architecture": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required",
+            "check_id",
+            "definition_registered"
+          ],
+          "properties": {
+            "required": {
+              "const": true
+            },
+            "check_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "definition_registered": {
+              "type": "boolean"
+            }
+          }
+        },
+        "acceptance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "controller_owned",
+            "removal_requires_separate_review"
+          ],
+          "properties": {
+            "controller_owned": {
+              "const": true
+            },
+            "removal_requires_separate_review": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowed_write_paths",
+        "forbidden_write_paths"
+      ],
+      "properties": {
+        "allowed_write_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "forbidden_write_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "git": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base_ref",
+        "branch_prefix",
+        "create_draft_pr",
+        "auto_merge",
+        "allowed_remote"
+      ],
+      "properties": {
+        "base_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "branch_prefix": {
+          "type": "string",
+          "minLength": 1
+        },
+        "create_draft_pr": {
+          "type": "boolean"
+        },
+        "auto_merge": {
+          "const": false
+        },
+        "allowed_remote": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "roles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementer",
+        "reviewer",
+        "local_assistant",
+        "research_on_request"
+      ],
+      "properties": {
+        "implementer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "local_assistant": {
+          "type": "string",
+          "minLength": 1
+        },
+        "research_on_request": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "environments",
+        "approved_command_ids",
+        "allowed_regions",
+        "allowed_resource_types",
+        "max_resource_count",
+        "estimated_monthly_cost_limit",
+        "plan_ttl_seconds",
+        "prod_requires_second_factor"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "approved_command_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "allowed_regions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "allowed_resource_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "max_resource_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "estimated_monthly_cost_limit": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "plan_ttl_seconds": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 600
+        },
+        "prod_requires_second_factor": {
+          "const": true
+        }
+      }
+    }
+  }
+}

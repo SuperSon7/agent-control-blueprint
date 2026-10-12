@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ApprovalContext",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "job_id",
+    "action",
+    "spec_sha256",
+    "head_sha",
+    "artifact_sha256",
+    "environment",
+    "policy_version",
+    "checks_sha256"
+  ],
+  "properties": {
+    "job_id": {
+      "type": "string",
+      "pattern": "^job-[a-z0-9-]{1,64}$"
+    },
+    "action": {
+      "enum": [
+        "ready_spec",
+        "accept_change",
+        "publish_draft_pr",
+        "apply_plan"
+      ]
+    },
+    "spec_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "head_sha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40,64}$"
+    },
+    "artifact_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "environment": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "policy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checks_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "const": "apply_plan"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "artifact_sha256": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string",
+            "minLength": 1
+          },
+          "checks_sha256": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
+}

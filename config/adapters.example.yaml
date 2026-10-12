@@ -1,0 +1,75 @@
+schema_version: 1
+# Commands below describe the entry points. Actual argv and tool permissions
+# are compiled by a version-verified adapter, never by an incoming message.
+adapters:
+  codex_subscription:
+    provider: codex_cli
+    billing_mode: subscription_only
+    auth_requirement: chatgpt_subscription
+    executable_hint: codex
+    entrypoint: exec
+    version_pin: null
+    verified: false
+    prompt_channel: stdin
+    result_mode: jsonl
+    code_permissions: workspace_write
+    review_permissions: read_only
+    network_policy: registered_endpoints_only
+    custom_model_providers_allowed: false
+  claude_subscription:
+    provider: claude_code_cli
+    billing_mode: subscription_only
+    auth_requirement: claude_subscription
+    executable_hint: claude
+    entrypoint: print
+    version_pin: null
+    verified: false
+    prompt_channel: stdin
+    result_mode: json
+    role: reviewer
+    use_bare_mode: false
+    extra_usage_allowed: false
+    custom_model_providers_allowed: false
+  gemini_subscription:
+    provider: gemini_cli
+    billing_mode: subscription_only
+    auth_requirement: google_account_subscription
+    executable_hint: gemini
+    entrypoint: headless
+    version_pin: null
+    verified: false
+    prompt_channel: stdin
+    result_mode: json
+    role: research_on_request
+    custom_model_providers_allowed: false
+  ollama_local:
+    provider: ollama
+    billing_mode: local_only
+    endpoint: http://127.0.0.1:11434
+    cloud_models_allowed: false
+    model_candidate: qwen3.5:9b
+    model_digest_pin: null
+    verified: false
+    context_tokens: 4096
+    timeout_seconds: 120
+    max_retries: 1
+    require_json_schema: true
+child_environment:
+  inherit_all: false
+  keep_registered_language_environment: true
+  deny_names:
+    - OPENAI_API_KEY
+    - CODEX_API_KEY
+    - ANTHROPIC_API_KEY
+    - GEMINI_API_KEY
+    - GOOGLE_API_KEY
+    - GOOGLE_APPLICATION_CREDENTIALS
+    - ANTHROPIC_BASE_URL
+    - OPENAI_BASE_URL
+    - CLAUDE_CODE_USE_BEDROCK
+    - CLAUDE_CODE_USE_VERTEX
+    - CLAUDE_CODE_USE_FOUNDRY
+    - AGENT_TELEGRAM_BOT_TOKEN
+    - AGENT_DISCORD_BOT_TOKEN
+    - AGENT_GIT_PUBLISH_TOKEN
+    - AGENT_INFRA_APPLY_CREDENTIAL

@@ -1,0 +1,18 @@
+schema_version: 1
+projects:
+  - project_id: bookmark
+    repo_path: D:/Projects/bookmark
+    status: active
+    manifest_path: .agent/project.yaml
+    approved_manifest_sha256: null
+    approved_rules_version: null
+    approved_cli_contract_versions: {}
+    require_clean_baseline: true
+  - project_id: personal-api
+    repo_path: D:/Projects/personal-api
+    status: parked
+    manifest_path: .agent/project.yaml
+    approved_manifest_sha256: null
+    approved_rules_version: null
+    approved_cli_contract_versions: {}
+    require_clean_baseline: true
