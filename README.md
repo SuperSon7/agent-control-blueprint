@@ -34,4 +34,6 @@
 
 Python 3.11 이상에서 python -m pip install -r requirements-dev.txt 후 python scripts/validate_blueprint.py를 실행한다. 검증은 YAML·JSON·조건부 Schema·SQLite 제약·문서 연결·모드 라우팅의 정합성을 확인한다. 실제 작업 복구·동시 실행·원격 인증·승인 소비·배포의 실행 검증은 구현 후 별도로 수행한다.
 
+GitHub Actions에도 같은 검사를 등록한다. 워크플로는 읽기 권한만 사용하고 CLI·모델·비밀 값 없이 실행한다. Actions 설정은 [checkout 공식 문서](https://github.com/actions/checkout/blob/main/README.md)와 [setup-python 공식 문서](https://github.com/actions/setup-python/blob/main/README.md)를 기준으로 작성했다.
+
 포폴 대상은 [작업 복구](backlog/portfolio-recovery.md), [중복 실행 방지](backlog/portfolio-deduplication.md), [승인 게이트](backlog/portfolio-approval-gates.md) 세 이슈로 나눈다. 이 저장소의 초기 업로드는 설계 결과이며 해당 기능의 구현 완료가 아니다.
