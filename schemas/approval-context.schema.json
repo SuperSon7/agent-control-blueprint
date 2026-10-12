@@ -11,7 +11,10 @@
     "artifact_sha256",
     "environment",
     "policy_version",
-    "checks_sha256"
+    "checks_sha256",
+    "mode",
+    "mode_revision",
+    "learning_evidence_sha256"
   ],
   "properties": {
     "job_id": {
@@ -57,6 +60,23 @@
         "null"
       ],
       "pattern": "^[a-f0-9]{64}$"
+    },
+    "mode": {
+      "enum": [
+        "delivery",
+        "portfolio"
+      ]
+    },
+    "mode_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "learning_evidence_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-f0-9]{64}$"
     }
   },
   "allOf": [
@@ -78,6 +98,28 @@
             "minLength": 1
           },
           "checks_sha256": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "portfolio"
+          },
+          "action": {
+            "enum": [
+              "publish_draft_pr",
+              "apply_plan"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "learning_evidence_sha256": {
             "type": "string"
           }
         }

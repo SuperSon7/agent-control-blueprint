@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "job_id": "job-portfolio-deduplication",
+  "project_id": "agent-control",
+  "kind": "architecture",
+  "spec_version": 1,
+  "goal": "중복 요청이 하나의 작업에 연결되는지 검증",
+  "acceptance": [
+    "실제 실패 실험과 결과 기록",
+    "소유자의 설계 선택·실험 해석·핵심 설명 연결",
+    "현재 커밋의 공통 기술 게이트 통과"
+  ],
+  "non_goals": [
+    "태그 검색",
+    "검색 엔진 도입",
+    "인증 구조 변경"
+  ],
+  "allowed_write_paths": [
+    "src/**",
+    "tests/**",
+    "docs/learning/**"
+  ],
+  "risk_floor": "high",
+  "base_sha": null,
+  "environment": null,
+  "budget": {
+    "wall_seconds": 5400,
+    "subscription_stages": 6,
+    "repair_attempts": 2
+  },
+  "mode": "portfolio",
+  "mode_revision": 1,
+  "learning": {
+    "targets": [
+      "deduplication"
+    ],
+    "owner_steps": [
+      "decision",
+      "interpretation",
+      "explanation"
+    ],
+    "owner_implementation_scope": [
+      "핵심 상태·트랜잭션·승인 조건표를 직접 작성"
+    ],
+    "study_timebox_minutes": 30,
+    "required_evidence": [
+      "decision",
+      "experiment",
+      "interpretation",
+      "explanation",
+      "case_study"
+    ]
+  }
+}

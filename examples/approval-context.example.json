@@ -5,6 +5,9 @@
   "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   "artifact_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
   "environment": "dev",
-  "policy_version": "0.1.0",
-  "checks_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  "policy_version": "0.2.0",
+  "checks_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "mode": "delivery",
+  "mode_revision": 1,
+  "learning_evidence_sha256": null
 }

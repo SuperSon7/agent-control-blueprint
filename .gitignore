@@ -7,3 +7,8 @@ var/
 *.tfstate
 *.tfstate.*
 *.tfplan
+
+__pycache__/
+*.pyc
+.token-usage/
+work/

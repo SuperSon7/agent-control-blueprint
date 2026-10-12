@@ -15,7 +15,12 @@ CREATE TABLE IF NOT EXISTS jobs (
   job_id TEXT PRIMARY KEY,
   project_id TEXT NOT NULL REFERENCES projects(project_id),
   kind TEXT NOT NULL,
-  state TEXT NOT NULL CHECK(state IN ('PROPOSED','PLANNING','NEEDS_INPUT','READY','PREFLIGHT','CONTEXT','IMPLEMENTING','CHECKING','REVIEWING','REVISING','READY_FOR_PR','PUBLISHING','PR_OPENED','PLAN_GENERATING','POLICY_CHECKING','WAITING_APPROVAL','APPLYING','VERIFYING_DEPLOYMENT','PAUSED','BLOCKED_QUOTA','AUTH_REQUIRED','BUDGET_EXHAUSTED','FAILED','RECOVERING','NEEDS_RECONCILIATION','COMPLETED','CANCELLED')),
+  mode TEXT NOT NULL CHECK(mode IN ('delivery','portfolio')),
+  mode_revision INTEGER NOT NULL DEFAULT 1 CHECK(mode_revision >= 1),
+  learning_json TEXT CHECK(learning_json IS NULL OR json_valid(learning_json))
+    CHECK((mode = 'delivery' AND learning_json IS NULL) OR
+          (mode = 'portfolio' AND learning_json IS NOT NULL AND json_type(learning_json) = 'object')),
+  state TEXT NOT NULL CHECK(state IN ('PROPOSED','PLANNING','NEEDS_INPUT','READY','PREFLIGHT','CONTEXT','IMPLEMENTING','CHECKING','REVIEWING','REVISING','READY_FOR_PR','PUBLISHING','PR_OPENED','PLAN_GENERATING','POLICY_CHECKING','WAITING_APPROVAL','APPLYING','VERIFYING_DEPLOYMENT','PAUSED','BLOCKED_QUOTA','AUTH_REQUIRED','BUDGET_EXHAUSTED','FAILED','RECOVERING','NEEDS_RECONCILIATION','COMPLETED','CANCELLED','LEARNING_PLAN','WAITING_OWNER_DECISION','EXPERIMENTING','WAITING_OWNER_INTERPRETATION','WAITING_OWNER_EXPLANATION','PORTFOLIO_RECORD')),
   spec_json TEXT NOT NULL CHECK(json_valid(spec_json)),
   spec_sha256 TEXT NOT NULL,
   base_sha TEXT,
@@ -130,4 +135,34 @@ CREATE TABLE IF NOT EXISTS project_leases (
   owner_id TEXT NOT NULL,
   generation INTEGER NOT NULL,
   expires_at_utc TEXT NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS learning_checkpoints (
+  checkpoint_id TEXT PRIMARY KEY,
+  job_id TEXT NOT NULL REFERENCES jobs(job_id),
+  kind TEXT NOT NULL CHECK(kind IN ('decision','interpretation','explanation')),
+  spec_sha256 TEXT NOT NULL,
+  mode_revision INTEGER NOT NULL CHECK(mode_revision >= 1),
+  head_sha TEXT NOT NULL,
+  status TEXT NOT NULL CHECK(status IN ('waiting','answered','stale','abandoned'))
+    CHECK(status != 'answered' OR (owner_actor_id IS NOT NULL AND
+          owner_response_artifact_id IS NOT NULL AND source_inbox_id IS NOT NULL)),
+  owner_actor_id TEXT,
+  owner_response_artifact_id TEXT REFERENCES artifacts(artifact_id),
+  source_inbox_id INTEGER REFERENCES inbox(inbox_id),
+  updated_at_utc TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS learning_evidence (
+  evidence_id TEXT PRIMARY KEY,
+  job_id TEXT NOT NULL REFERENCES jobs(job_id),
+  checkpoint_id TEXT REFERENCES learning_checkpoints(checkpoint_id),
+  kind TEXT NOT NULL CHECK(kind IN ('decision','experiment','interpretation','explanation','case_study')),
+  origin TEXT NOT NULL CHECK(origin IN ('owner','agent','controller')),
+  actor_id TEXT NOT NULL,
+  artifact_id TEXT NOT NULL REFERENCES artifacts(artifact_id),
+  spec_sha256 TEXT NOT NULL,
+  mode_revision INTEGER NOT NULL CHECK(mode_revision >= 1),
+  head_sha TEXT NOT NULL,
+  created_at_utc TEXT NOT NULL
 );

@@ -14,7 +14,8 @@
     "scope",
     "git",
     "roles",
-    "deployment"
+    "deployment",
+    "work_modes"
   ],
   "properties": {
     "schema_version": {
@@ -280,6 +281,33 @@
         },
         "prod_requires_second_factor": {
           "const": true
+        }
+      }
+    },
+    "work_modes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default",
+        "allowed"
+      ],
+      "properties": {
+        "default": {
+          "enum": [
+            "delivery",
+            "portfolio"
+          ]
+        },
+        "allowed": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "delivery",
+              "portfolio"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
         }
       }
     }

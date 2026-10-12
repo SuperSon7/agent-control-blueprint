@@ -7,11 +7,29 @@ documents:
   architecture: .agent/architecture.md
   examples: .agent/examples/README.md
 commands:
-  lint: [python, -m, ruff, check, .]
-  format: [python, -m, ruff, format, --check, .]
-  test: [python, -m, pytest, -q]
+  lint:
+  - python
+  - -m
+  - ruff
+  - check
+  - .
+  format:
+  - python
+  - -m
+  - ruff
+  - format
+  - --check
+  - .
+  test:
+  - python
+  - -m
+  - pytest
+  - -q
 checks:
-  required: [lint, format, test]
+  required:
+  - lint
+  - format
+  - test
   architecture:
     required: true
     check_id: module_boundaries
@@ -20,8 +38,17 @@ checks:
     controller_owned: true
     removal_requires_separate_review: true
 scope:
-  allowed_write_paths: [src/**, tests/**, docs/**]
-  forbidden_write_paths: [.agent/project.yaml, .agent/rules.generated.md, PROJECT_RULES.md, AGENTS.md, CLAUDE.md, GEMINI.md]
+  allowed_write_paths:
+  - src/**
+  - tests/**
+  - docs/**
+  forbidden_write_paths:
+  - .agent/project.yaml
+  - .agent/rules.generated.md
+  - PROJECT_RULES.md
+  - AGENTS.md
+  - CLAUDE.md
+  - GEMINI.md
 git:
   base_ref: main
   branch_prefix: agent/
@@ -35,7 +62,9 @@ roles:
   research_on_request: gemini_subscription
 deployment:
   enabled: false
-  environments: [dev, prod]
+  environments:
+  - dev
+  - prod
   approved_command_ids: []
   allowed_regions: []
   allowed_resource_types: []
@@ -43,3 +72,8 @@ deployment:
   estimated_monthly_cost_limit: null
   plan_ttl_seconds: 600
   prod_requires_second_factor: true
+work_modes:
+  default: delivery
+  allowed:
+  - delivery
+  - portfolio

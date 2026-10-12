@@ -7,7 +7,9 @@ runtime:
   concurrent_writers: 1
   concurrent_local_inferences: 1
 billing:
-  allowed_modes: [subscription_only, local_only]
+  allowed_modes:
+  - subscription_only
+  - local_only
   paid_ai_api_enabled: false
   extra_usage_enabled: false
   automatic_paid_fallback: false
@@ -22,6 +24,7 @@ limits:
   observed_tool_executions_per_stage: 80
   hard_token_limit: null
   reset_budget_on_resume: false
+  wall_budget_scope: active_execution_excluding_owner_quota_and_approval_wait
 context:
   use_git_hash_cache: true
   include_source_references: true
@@ -43,7 +46,9 @@ remote:
     allowed_chat_ids: []
     private_chat_only: true
     poll_timeout_seconds: 25
-    allowed_updates: [message, callback_query]
+    allowed_updates:
+    - message
+    - callback_query
     paid_broadcasts: false
   discord:
     enabled: false
@@ -57,7 +62,13 @@ remote:
   approval_ttl_seconds: 600
   require_second_factor_for_prod: true
   second_factor_configured: false
-  notify: [accepted, completed, failed, paused, approval_required, quota_blocked]
+  notify:
+  - accepted
+  - completed
+  - failed
+  - paused
+  - approval_required
+  - quota_blocked
   send_raw_logs: false
   send_source_files: false
   send_infra_plan_or_state: false
@@ -69,3 +80,23 @@ deployment:
   auto_apply_dev: false
   auto_apply_prod: false
   remote_prod_without_second_factor: false
+work_modes:
+  default: delivery
+  allowed:
+  - delivery
+  - portfolio
+  persist_per_issue: true
+  shared_technical_gates: true
+  skills:
+    delivery: deliver-task
+    portfolio: learn-and-build
+  portfolio:
+    study_timebox_minutes: 30
+    max_targets_per_issue: 2
+    owner_checkpoints:
+    - decision
+    - interpretation
+    - explanation
+    model_calls_while_waiting: 0
+    budget_shared_with_implementation: true
+    owner_can_explicitly_change_mode: true

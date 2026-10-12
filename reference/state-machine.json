@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "states": [
     "PROPOSED",
     "PLANNING",
@@ -27,7 +27,13 @@
     "RECOVERING",
     "NEEDS_RECONCILIATION",
     "COMPLETED",
-    "CANCELLED"
+    "CANCELLED",
+    "LEARNING_PLAN",
+    "WAITING_OWNER_DECISION",
+    "EXPERIMENTING",
+    "WAITING_OWNER_INTERPRETATION",
+    "WAITING_OWNER_EXPLANATION",
+    "PORTFOLIO_RECORD"
   ],
   "transitions": {
     "PROPOSED": [
@@ -65,7 +71,8 @@
       "NEEDS_INPUT",
       "BUDGET_EXHAUSTED",
       "FAILED",
-      "PAUSED"
+      "PAUSED",
+      "LEARNING_PLAN"
     ],
     "IMPLEMENTING": [
       "CHECKING",
@@ -75,7 +82,8 @@
       "BUDGET_EXHAUSTED",
       "FAILED",
       "PAUSED",
-      "CANCELLED"
+      "CANCELLED",
+      "PLAN_GENERATING"
     ],
     "CHECKING": [
       "REVISING",
@@ -83,7 +91,8 @@
       "READY_FOR_PR",
       "BUDGET_EXHAUSTED",
       "FAILED",
-      "PAUSED"
+      "PAUSED",
+      "WAITING_OWNER_EXPLANATION"
     ],
     "REVIEWING": [
       "REVISING",
@@ -93,7 +102,8 @@
       "BLOCKED_QUOTA",
       "BUDGET_EXHAUSTED",
       "FAILED",
-      "PAUSED"
+      "PAUSED",
+      "WAITING_OWNER_EXPLANATION"
     ],
     "REVISING": [
       "CHECKING",
@@ -129,7 +139,8 @@
       "WAITING_APPROVAL",
       "FAILED",
       "NEEDS_INPUT",
-      "PAUSED"
+      "PAUSED",
+      "WAITING_OWNER_EXPLANATION"
     ],
     "WAITING_APPROVAL": [
       "READY_FOR_PR",
@@ -137,7 +148,8 @@
       "APPLYING",
       "NEEDS_INPUT",
       "CANCELLED",
-      "PAUSED"
+      "PAUSED",
+      "WAITING_OWNER_EXPLANATION"
     ],
     "APPLYING": [
       "VERIFYING_DEPLOYMENT",
@@ -183,18 +195,138 @@
       "CANCELLED"
     ],
     "COMPLETED": [],
-    "CANCELLED": []
+    "CANCELLED": [],
+    "LEARNING_PLAN": [
+      "WAITING_OWNER_DECISION",
+      "PAUSED",
+      "NEEDS_INPUT",
+      "BUDGET_EXHAUSTED"
+    ],
+    "WAITING_OWNER_DECISION": [
+      "EXPERIMENTING",
+      "PREFLIGHT",
+      "PAUSED",
+      "CANCELLED"
+    ],
+    "EXPERIMENTING": [
+      "WAITING_OWNER_INTERPRETATION",
+      "PAUSED",
+      "FAILED",
+      "BUDGET_EXHAUSTED"
+    ],
+    "WAITING_OWNER_INTERPRETATION": [
+      "IMPLEMENTING",
+      "EXPERIMENTING",
+      "PREFLIGHT",
+      "PAUSED",
+      "CANCELLED",
+      "PLAN_GENERATING"
+    ],
+    "WAITING_OWNER_EXPLANATION": [
+      "PORTFOLIO_RECORD",
+      "PREFLIGHT",
+      "PAUSED",
+      "CANCELLED"
+    ],
+    "PORTFOLIO_RECORD": [
+      "READY_FOR_PR",
+      "WAITING_APPROVAL",
+      "PAUSED",
+      "BUDGET_EXHAUSTED"
+    ]
   },
   "terminal": [
     "COMPLETED",
     "CANCELLED"
   ],
   "edge_guards_required": true,
-  "awaiting_approval_action_to_next": {
-    "accept_change": "READY_FOR_PR",
-    "publish_draft_pr": "PUBLISHING",
-    "apply_plan": "APPLYING"
-  },
   "any_running_state_can_record_cancellation_intent": true,
-  "cloud_mutation_cancellation": "reconcile_before_new_execution"
+  "cloud_mutation_cancellation": "reconcile_before_new_execution",
+  "mode_guards": {
+    "delivery": {
+      "learning_states_allowed": false,
+      "preflight_next_by_kind": {
+        "infra_plan": "PLAN_GENERATING",
+        "infra_apply": "PLAN_GENERATING",
+        "default": "CONTEXT"
+      }
+    },
+    "portfolio": {
+      "context_next": "LEARNING_PLAN",
+      "implement_requires": [
+        "owner_decision_current",
+        "experiment_current",
+        "owner_interpretation_current"
+      ],
+      "ready_for_pr_requires": [
+        "owner_explanation_current",
+        "portfolio_record_current",
+        "technical_gates_passed"
+      ],
+      "apply_requires": [
+        "learning_evidence_current",
+        "technical_gates_passed",
+        "approval_context_current"
+      ],
+      "waiting_does_not_call_models": true,
+      "preflight_next": "CONTEXT",
+      "after_owner_interpretation_by_kind": {
+        "infra_plan": "PLAN_GENERATING",
+        "infra_apply": "PLAN_GENERATING",
+        "default": "IMPLEMENTING"
+      },
+      "plan_generating_requires": [
+        "owner_decision_current",
+        "experiment_current",
+        "owner_interpretation_current"
+      ],
+      "waiting_approval_requires": [
+        "owner_explanation_current",
+        "portfolio_record_current",
+        "technical_gates_passed"
+      ],
+      "portfolio_record_next_by_kind": {
+        "infra_plan": "WAITING_APPROVAL",
+        "infra_apply": "WAITING_APPROVAL",
+        "default": "READY_FOR_PR"
+      }
+    }
+  },
+  "awaiting_approval_action_to_next_by_mode": {
+    "accept_change": {
+      "delivery": "READY_FOR_PR",
+      "portfolio": "WAITING_OWNER_EXPLANATION"
+    },
+    "publish_draft_pr": {
+      "delivery": "PUBLISHING",
+      "portfolio": "PUBLISHING"
+    },
+    "apply_plan": {
+      "delivery": "APPLYING",
+      "portfolio": "APPLYING"
+    }
+  },
+  "mode_change": {
+    "owner_explicit_only": true,
+    "safe_stop_first": true,
+    "increment": [
+      "spec_version",
+      "mode_revision"
+    ],
+    "invalidate": [
+      "approvals",
+      "current_learning_completion"
+    ],
+    "preserve": [
+      "raw_evidence",
+      "budget_usage"
+    ],
+    "next": "PREFLIGHT"
+  },
+  "evidence_binding": {
+    "raw_checkpoint_head_is_immutable": true,
+    "final_manifest_binds_current_head": true,
+    "semantic_change_requires_owner_amendment": true,
+    "controller_revalidation_may_not_fabricate_owner_answers": true
+  }
 }

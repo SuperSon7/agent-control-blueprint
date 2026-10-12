@@ -26,5 +26,8 @@
     "wall_seconds": 5400,
     "subscription_stages": 6,
     "repair_attempts": 2
-  }
+  },
+  "mode": "delivery",
+  "mode_revision": 1,
+  "learning": null
 }

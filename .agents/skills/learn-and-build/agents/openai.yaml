@@ -1,0 +1,6 @@
+interface:
+  display_name: "learn-and-build"
+  short_description: "설계 비교와 실패 실험으로 학습하고 직접 판단한 포트폴리오 근거를 남깁니다"
+  default_prompt: "$learn-and-build 이 portfolio 이슈에서 내가 설계 선택과 실험 해석을 직접 하도록 도와줘."
+policy:
+  allow_implicit_invocation: true

@@ -16,7 +16,10 @@
     "risk_floor",
     "base_sha",
     "environment",
-    "budget"
+    "budget",
+    "mode",
+    "mode_revision",
+    "learning"
   ],
   "properties": {
     "schema_version": {
@@ -117,6 +120,109 @@
           "maximum": 2
         }
       }
+    },
+    "mode": {
+      "enum": [
+        "delivery",
+        "portfolio"
+      ]
+    },
+    "mode_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "learning": {
+      "type": [
+        "object",
+        "null"
+      ]
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "portfolio"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "learning": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "targets",
+              "owner_steps",
+              "owner_implementation_scope",
+              "study_timebox_minutes",
+              "required_evidence"
+            ],
+            "properties": {
+              "targets": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "recovery",
+                    "deduplication",
+                    "approval-gates",
+                    "custom"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 2,
+                "uniqueItems": true
+              },
+              "owner_steps": {
+                "const": [
+                  "decision",
+                  "interpretation",
+                  "explanation"
+                ]
+              },
+              "owner_implementation_scope": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 1
+              },
+              "study_timebox_minutes": {
+                "type": "integer",
+                "minimum": 15,
+                "maximum": 90
+              },
+              "required_evidence": {
+                "const": [
+                  "decision",
+                  "experiment",
+                  "interpretation",
+                  "explanation",
+                  "case_study"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "delivery"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "learning": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
 }

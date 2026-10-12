@@ -1,6 +1,6 @@
 schema_version: 1
 policy_id: default
-version: 0.1.0
+version: 0.2.0
 unknown_risk: high
 model_can_lower_risk: false
 model_can_approve: false
@@ -76,6 +76,9 @@ approvals:
   - environment
   - policy_version
   - checks_sha256
+  - mode
+  - mode_revision
+  - learning_evidence_sha256
   compare_at_execution: true
 infra:
   allow_model_apply: false
@@ -85,3 +88,14 @@ infra:
   partial_apply_failure: reconcile_then_replan
   destructive_in_general_loop: deny
 glob_semantics: double_star_matches_zero_or_more_path_segments
+learning_gate:
+  applies_to: portfolio
+  owner_checkpoints:
+  - decision
+  - interpretation
+  - explanation
+  require_authenticated_owner: true
+  agent_may_answer_as_owner: false
+  artifact_existence_only_is_insufficient: true
+  must_match_spec_mode_and_head: true
+  replace_technical_gate: false

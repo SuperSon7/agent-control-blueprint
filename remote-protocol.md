@@ -39,3 +39,12 @@ Telegram 폴링은 25초 대기와 네트워크 오류 backoff를 사용한다. 
 Discord 어댑터는 허용 사용자·서버·채널 ID를 함께 확인하고 slash command만 접수한다. 수신 즉시 응답을 유예하고 동일 interaction_id를 중복 처리하지 않는다. 긴 작업 알림은 등록된 채널에 bot 권한으로 보내며 만료된 interaction token을 재사용하지 않는다.
 
 PC와 daemon이 멈추면 실시간 응답도 없다. 재부팅 이후 inbox·작업 상태를 복구하며 오래된 변경 요청은 새 확인을 요구한다. 24시간 이상 꺼져 있으면 Telegram에서 미수신 요청이 사라질 수 있다.
+
+
+## 모드와 학습 명령
+
+/task project mode=delivery 목표 또는 /task project mode=portfolio 목표로 제안한다. /mode job delivery 또는 portfolio는 현재 단계를 안전하게 멈추고 모드 버전을 바꾸는 소유자 명령이다.
+
+/learning job은 현재 학습 단계·필요한 본인 응답·근거 위치를 모델 호출 없이 조회한다. /answer checkpoint 내용은 등록된 소유자의 답을 해당 명세·모드·커밋의 체크포인트에 연결한다. 다른 사용자의 답이나 모델 결과는 소유자 답으로 쓰지 않는다.
+
+모드 변경과 근거 변경은 관련 승인 문맥을 무효화한다. 학습 답을 /approve로 해석하지 않는다. 모델 호출 없이 기다리며 네트워크 복귀 시 오래된 실행 명령과 학습 근거의 현재 버전을 각각 확인한다.

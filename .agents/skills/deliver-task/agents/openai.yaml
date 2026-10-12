@@ -1,0 +1,6 @@
+interface:
+  display_name: "deliver-task"
+  short_description: "확정한 이슈를 기존 구조와 공통 게이트에 맞춰 빠르게 구현합니다"
+  default_prompt: "$deliver-task 현재 delivery 이슈를 기존 패턴으로 구현하고 실제 검사 결과를 남겨줘."
+policy:
+  allow_implicit_invocation: true
