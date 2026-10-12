@@ -1,0 +1,14 @@
+var/
+.venv/
+.env
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+*.tfstate
+*.tfstate.*
+*.tfplan
+
+__pycache__/
+*.pyc
+.token-usage/
+work/
